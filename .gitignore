@@ -1,0 +1,14 @@
+# Ignore virtual environments
+venv/
+.env/
+
+# Ignore compiled Python files
+__pycache__/
+
+# Ignore dataset and large files
+data/
+models/
+results/
+logs/
+
+
