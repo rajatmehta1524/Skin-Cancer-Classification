@@ -89,3 +89,19 @@ def load_model(model_path="model.h5"):
         return tf.keras.models.load_model(model_path)
     else:
         raise FileNotFoundError(f"No model found at {model_path}")
+
+
+def evaluate_model(model, test_dataset):
+    """
+    Evaluates the model on the test dataset.
+
+    Parameters:
+        model (tf.keras.Model): The trained model.
+        test_dataset (tf.data.Dataset): The test dataset.
+
+    Returns:
+        test_loss (float): The loss on the test dataset.
+        test_acc (float): The accuracy on the test dataset.
+    """
+    test_loss, test_acc = model.evaluate(test_dataset)
+    return test_loss, test_acc
