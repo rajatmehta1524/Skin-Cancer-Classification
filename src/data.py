@@ -3,7 +3,7 @@ import os
 
 # Define dataset paths
 DATASET_DIR = "../dataset"
-IMG_SIZE = (224, 224)  # Resize images to 224x224
+IMG_SIZE = (512, 512)  # Resize images to 224x224
 BATCH_SIZE = 8  # Match batch size from main.py
 AUTOTUNE = tf.data.AUTOTUNE
 
