@@ -37,7 +37,7 @@ def train_model(model_type, epochs=10, save_model=True, model_dir="../models"):
                         epochs=epochs)
 
     # Plot training history
-    plot_training_history(history)
+    plot_training_history(history, model_dir, model_type)
 
     # Saving the model
     if save_model:

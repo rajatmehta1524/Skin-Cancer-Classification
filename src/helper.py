@@ -83,7 +83,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names, model_dir, model_type):
     plt.close()
 
 
-def plot_training_history(history):
+def plot_training_history(history, model_dir, model_type):
     """
     Plots training accuracy and loss curves.
 
@@ -108,6 +108,9 @@ def plot_training_history(history):
     plt.ylabel('Accuracy')
     plt.legend()
 
+    epoch_acc_path = os.path.join(model_dir, f"{model_type}_Epochs_vs_acc.png")
+    plt.savefig(epoch_acc_path)
+
     # Plot loss
     plt.subplot(1, 2, 2)
     plt.plot(epochs, loss, 'bo-', label='Training Loss')
@@ -116,6 +119,9 @@ def plot_training_history(history):
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
+
+    train_val_path = os.path.join(model_dir, f"{model_type}_Training_vs_Val_loss.png")
+    plt.savefig(train_val_path)
 
     plt.show()
 
