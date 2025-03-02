@@ -3,19 +3,23 @@ import numpy as np
 import os
 import argparse
 import cv2
-from data import load_data
-from helper import display_sample_predictions,preprocess_image
+from helper import display_sample_predictions, preprocess_image
 
-def load_trained_model(model_path="../models/skin_cancer_model.h5"):
+def load_trained_model(model_type, model_dir="../models"):
     """
-    Loads a pre-trained model.
+    Loads a pre-trained model based on the model type.
 
     Parameters:
-        model_path (str): Path to the trained model.
+        model_type (str): Type of model ('cnn', 'convnext', 'vit').
+        model_dir (str): Directory where the model is saved.
 
     Returns:
         model (tf.keras.Model): Loaded model.
     """
+    # Dynamically determine the model name based on the model type
+    model_name = f"{model_type}_skin_cancer_model.h5"  # e.g., cnn_skin_cancer_model.h5
+    model_path = os.path.join(model_dir, model_name)
+
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model file not found at {model_path}. Train the model first.")
 
@@ -54,16 +58,15 @@ def make_predictions(model, dataset, num_samples=10):
     return predictions, labels.numpy()
 
 if __name__ == "__main__":
-    # Load test dataset
-    # _, _, test_dataset, _, _ = load_data()
-
-    parser = argparse.ArgumentParser(description="Run inference on a single image")
-    parser.add_argument("--image_path", type=str, required=True, help="Path to input image")
+    # Set up argument parsing
+    parser = argparse.ArgumentParser(description="Run inference on a single image or dataset")
+    parser.add_argument("--model", choices=['cnn', 'convnext', 'vit'], required=True, 
+                        help="Specify the model type: 'cnn', 'convnext', or 'vit'")
+    parser.add_argument("--image_path", type=str, required=True, help="Path to the input image")
     args = parser.parse_args()
 
-    # Load trained model
-    model = load_trained_model()
-    predict(model, args.image_path)
+    # Load the trained model based on the model type
+    model = load_trained_model(model_type=args.model)
 
-    # # Run inference on test data
-    # make_predictions(model, test_dataset)
+    # Make prediction on the provided image
+    predict(model, args.image_path)
