@@ -1,3 +1,4 @@
+#%%
 import tensorflow as tf
 import argparse
 import numpy as np
@@ -33,7 +34,6 @@ def main(model_type):
     # Save model metadata and classification report
     save_model_info(model, model_type, test_dataset, class_names, "../models", batch_size=8)
 
-
     # Compute predictions for confusion matrix
     y_true, y_pred = [], []
     for images, labels in test_dataset:
@@ -43,20 +43,6 @@ def main(model_type):
 
     # Save Confusion Matrix separately
     plot_confusion_matrix(y_true, y_pred, class_names, "../models", model_type)
-
-    # # Generate Confusion Matrix
-    # cm = confusion_matrix(y_true, y_pred)
-    
-    # plt.figure(figsize=(6, 5))
-    # sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=class_names, yticklabels=class_names)
-    # plt.xlabel("Predicted Label")
-    # plt.ylabel("True Label")
-    # plt.title(f"Confusion Matrix - {model_type.upper()}")
-    
-    # cm_path = os.path.join("../models", f"{model_type}_confusion_matrix.png")
-    # plt.savefig(cm_path)
-    # plt.show()
-    # print(f"Confusion matrix saved at: {cm_path}")
 
     # Display Classification Report
     print("\nClassification Report:")
@@ -71,7 +57,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--model', 
         choices=['cnn', 'convnext', 'vit'], 
-        required=True, 
+        required=True,
         help="Specify the model type: 'cnn', 'convnext', or 'vit'"
     )
     args = parser.parse_args()
