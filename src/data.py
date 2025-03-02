@@ -24,7 +24,7 @@ def load_data():
     )
 
     val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-        os.path.join(DATASET_DIR, "val"),
+        os.path.join(DATASET_DIR, "test"),
         image_size=IMG_SIZE,
         batch_size=BATCH_SIZE,
         label_mode="categorical"
