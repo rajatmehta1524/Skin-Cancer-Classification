@@ -55,7 +55,7 @@ def main(model_type):
     print(classification_report(y_true, y_pred, target_names=class_names))
 
     # Display sample predictions
-    display_sample_predictions(model, test_dataset)
+    display_sample_predictions(model, test_dataset, class_names)
 
 if __name__ == "__main__":
     # Set up argument parsing
