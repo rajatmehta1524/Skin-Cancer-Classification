@@ -9,14 +9,8 @@ import time
 def load_trained_model(model_type, model_dir="../models"):
     """
     Loads a pre-trained model based on the model type.
-
-    Parameters:
-        model_type (str): Type of model ('cnn', 'convnext', 'vit').
-        model_dir (str): Directory where the model is saved.
-
-    Returns:
-        model (tf.keras.Model): Loaded model.
     """
+
     # Dynamically determine the model name based on the model type
     model_name = f"{model_type}_skin_cancer_model.h5"  # e.g., cnn_skin_cancer_model.h5
     model_path = os.path.join(model_dir, model_name)
@@ -30,7 +24,7 @@ def load_trained_model(model_type, model_dir="../models"):
 
 def predict(model, image_path):
     """Preprocesses the image and makes a prediction."""
-    image = preprocess_image(image_path)  # Resize & normalize
+    image = preprocess_image(image_path)  # Resize, normalize, contrast adjustment
     image = np.expand_dims(image, axis=0)  # Add batch dimension
     
     start_time = time.time()
@@ -48,15 +42,6 @@ def predict(model, image_path):
 def make_predictions(model, dataset, num_samples=10):
     """
     Makes predictions using the trained model and displays sample results.
-
-    Parameters:
-        model (tf.keras.Model): The trained model.
-        dataset (tf.data.Dataset): Dataset to run inference on.
-        num_samples (int): Number of sample predictions to display.
-
-    Returns:
-        predictions (np.ndarray): Predicted class probabilities.
-        true_labels (np.ndarray): True labels for evaluation.
     """
     images, labels = next(iter(dataset.take(1)))  # Take a single batch
     predictions = model.predict(images)
@@ -65,7 +50,7 @@ def make_predictions(model, dataset, num_samples=10):
     return predictions, labels.numpy()
 
 if __name__ == "__main__":
-    # Set up argument parsing
+    # Set up for argument parsing
     parser = argparse.ArgumentParser(description="Run inference on a single image or dataset")
     parser.add_argument("--model", choices=['cnn', 'convnext', 'vit'], required=True, 
                         help="Specify the model type: 'cnn', 'convnext', or 'vit'")

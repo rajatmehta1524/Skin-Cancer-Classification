@@ -9,21 +9,12 @@ from sklearn.metrics import confusion_matrix, classification_report
 
 def save_model_info(model, model_type, test_dataset, class_names, model_dir, batch_size=8):
     """
-    Saves model information, training parameters, and classification report to a text file.
-
-    Parameters:
-        model (tf.keras.Model): The trained model.
-        model_type (str): The type of model used (cnn, convnext, vit).
-        test_dataset (tf.data.Dataset): The test dataset.
-        class_names (list): List of class names.
-        model_dir (str): Directory to save model-related files.
-        epochs (int): Number of epochs used for training.
-        batch_size (int): Batch size used for training.
+        This function is used for saving model information, training parameters, and classification report to a text file.
     """
-    # Create model directory if not exists
+
     os.makedirs(model_dir, exist_ok=True)
 
-    # Get model configuration
+    #Model configuration
     model_info = {
         "Model Type": model_type,
         "Optimizer": str(model.optimizer.get_config()["name"]),
@@ -60,14 +51,7 @@ def save_model_info(model, model_type, test_dataset, class_names, model_dir, bat
 
 def plot_confusion_matrix(y_true, y_pred, class_names, model_dir, model_type):
     """
-    Plots and saves the confusion matrix.
-
-    Parameters:
-        y_true (array): True class labels.
-        y_pred (array): Predicted class labels.
-        class_names (list): List of class names.
-        model_dir (str): Directory to save the confusion matrix.
-        model_type (str): Model type (cnn, convnext, vit).
+    For Plotting and saving the confusion matrix.
     """
     cm = confusion_matrix(y_true, y_pred)
 
@@ -85,10 +69,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names, model_dir, model_type):
 
 def plot_training_history(history, model_dir, model_type):
     """
-    Plots training accuracy and loss curves.
-
-    Args:
-        history (tf.keras.callbacks.History): The history object returned from model.fit().
+    For Plotting training accuracy and loss curves.
     """
     # Extract metrics
     acc = history.history['accuracy']
@@ -129,26 +110,7 @@ def display_sample_predictions(model, test_data, class_labels, num_samples=5):
     """
     Displays a few sample test images along with their predicted labels.
 
-    Args:
-        model (tf.keras.Model): The trained model for making predictions.
-        test_data (tf.keras.preprocessing.image.DirectoryIterator): The test dataset.
-        class_labels (list): List of class names corresponding to label indices.
-        num_samples (int): Number of images to display.
     """
-    # test_data_iter = iter(test_data)
-    # test_images, test_labels = next(test_data_iter)
-    # predictions = model.predict(test_images)
-
-    # plt.figure(figsize=(12, 6))
-    # for i in range(num_samples):
-    #     plt.subplot(1, num_samples, i+1)
-    #     plt.imshow(test_images[i].astype("uint8"))
-    #     predicted_class = class_labels[np.argmax(predictions[i])]
-    #     actual_class = class_labels[np.argmax(test_labels[i])]
-    #     plt.title(f"Pred: {predicted_class}\nActual: {actual_class}")
-    #     plt.axis('off')
-    
-    # plt.show()
 
     # Get a batch of test images and labels
     test_data_iter = iter(test_data)  # Create an iterator
@@ -173,23 +135,14 @@ def display_sample_predictions(model, test_data, class_labels, num_samples=5):
 def save_model(model, model_path="model.h5"):
     """
     Saves the trained model to a file.
-
-    Args:
-        model (tf.keras.Model): The trained model.
-        model_path (str): Path to save the model.
     """
     model.save(model_path)
     print(f"Model saved to {model_path}")
 
+
 def load_model(model_path="model.h5"):
     """
     Loads a trained model from a file.
-
-    Args:
-        model_path (str): Path to the saved model.
-
-    Returns:
-        tf.keras.Model: The loaded model.
     """
     if os.path.exists(model_path):
         print(f"Loading model from {model_path}")
@@ -201,14 +154,6 @@ def load_model(model_path="model.h5"):
 def evaluate_model(model, test_dataset):
     """
     Evaluates the model on the test dataset.
-
-    Parameters:
-        model (tf.keras.Model): The trained model.
-        test_dataset (tf.data.Dataset): The test dataset.
-
-    Returns:
-        test_loss (float): The loss on the test dataset.
-        test_acc (float): The accuracy on the test dataset.
     """
     test_loss, test_acc = model.evaluate(test_dataset)
     return test_loss, test_acc

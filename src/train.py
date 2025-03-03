@@ -9,22 +9,11 @@ import time
 def train_model(model_type, epochs=10, save_model=True, model_dir="../models"):
     """
     Trains the selected model and saves it if required.
-
-    Parameters:
-        model_type (str): The type of model to train ('cnn', 'convnext', 'vit').
-        epochs (int): Number of epochs for training.
-        save_model (bool): Whether to save the trained model.
-        model_dir (str): Directory to save the model.
-        model_name (str): Name of the saved model file.
-
-    Returns:
-        model (tf.keras.Model): The trained model.
-        history (tf.keras.callbacks.History): Training history.
     """
     # Load dataset
     train_dataset, val_dataset, _, input_shape, num_classes = load_data()
 
-    # Build model using the get_model function
+    # Building model using the get_model function
     model = get_model(model_type, input_shape, num_classes)
 
     # Compile model
