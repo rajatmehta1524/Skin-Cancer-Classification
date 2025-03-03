@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.applications import ConvNeXtTiny
 from transformers import ViTForImageClassification, ViTFeatureExtractor
+import os
 
 # CNN Model
 def build_cnn_model(input_shape, num_classes):

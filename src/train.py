@@ -4,6 +4,7 @@ from data import load_data
 from model import get_model  # Import get_model to select model type
 from helper import plot_training_history
 import os
+import time
 
 def train_model(model_type, epochs=10, save_model=True, model_dir="../models"):
     """
@@ -31,10 +32,17 @@ def train_model(model_type, epochs=10, save_model=True, model_dir="../models"):
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
+    start_time = time.time()
+
     # Train model
     history = model.fit(train_dataset,
                         validation_data=val_dataset,
                         epochs=epochs)
+
+    end_time = time.time()
+    training_time = (end_time - start_time) / 60  # Convert to minutes
+    
+    print(f"Training Time = {training_time:.2f} mins")
 
     # Plot training history
     plot_training_history(history, model_dir, model_type)
@@ -45,6 +53,9 @@ def train_model(model_type, epochs=10, save_model=True, model_dir="../models"):
         model_name = f"{model_type}_skin_cancer_model.h5"  # Save the model with a name reflecting the model type
         model_path = os.path.join(model_dir, model_name)
         model.save(model_path)
+        model_size = os.path.getsize(model_path) / (1024 * 1024)  # Convert bytes to MB
+        print(f"Model Size: {model_size:.2f} MB")
+
         print(f"Model saved successfully at: {model_path}")
 
     return model, history

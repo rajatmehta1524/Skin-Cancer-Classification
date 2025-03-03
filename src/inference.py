@@ -4,6 +4,7 @@ import os
 import argparse
 import cv2
 from helper import display_sample_predictions, preprocess_image
+import time
 
 def load_trained_model(model_type, model_dir="../models"):
     """
@@ -32,10 +33,16 @@ def predict(model, image_path):
     image = preprocess_image(image_path)  # Resize & normalize
     image = np.expand_dims(image, axis=0)  # Add batch dimension
     
+    start_time = time.time()
     prediction = model.predict(image)
+    end_time = time.time()
+
     predicted_class = np.argmax(prediction)
     confidence = np.max(prediction)
-    
+
+    inference_time = (end_time - start_time) * 1000  # Convert to milliseconds
+    print(f"Inference Time: {inference_time:.2f} ms")
+
     print(f"Predicted Class: {predicted_class}, Confidence: {confidence:.2f}")
 
 def make_predictions(model, dataset, num_samples=10):
