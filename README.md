@@ -91,7 +91,7 @@ Below are the loss and accuracy curves obtained during training:
 
 ### Training and Validation Loss and Accuracy Curves
 ![Training Loss Curve](assets/convnext_Training_vs_Val_loss.png)  
-*Figure 5: Training and validation loss and Accuracy curves.*
+*Figure 5: Accuracy and Loss curves.*
 
 ## Evaluating the Model
 After training, evaluate the model using:
