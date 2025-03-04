@@ -3,6 +3,8 @@
 ## Overview
 This project focuses on classifying skin cancer images into benign or malignant categories using deep learning. The model is built using TensorFlow/Keras and follows a structured approach for training, evaluation, and inference, allowing the use of different model architectures: CNN, ConvNeXt, and Vision Transformer (ViT).
 
+ 📝**Detailed Project Report :** [Click Here](project_report/Skin_Cancer_Image_Classification-Rajat%20Mehta.pdf)  
+
 ## Directory Structure
 
 ```
