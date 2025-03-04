@@ -11,7 +11,7 @@ from helper import plot_training_history, evaluate_model, display_sample_predict
 
 def main(model_type):
     # Load dataset
-    train_dataset, val_dataset, test_dataset, input_shape, num_classes = load_data()
+    train_dataset, val_dataset, test_dataset, input_shape, num_classes = load_data(model_type)
 
     class_names = ["Benign", "Malignant"]
 

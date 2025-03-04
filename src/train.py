@@ -11,7 +11,7 @@ def train_model(model_type, epochs=10, save_model=True, model_dir="../models"):
     Trains the selected model and saves it if required.
     """
     # Load dataset
-    train_dataset, val_dataset, _, input_shape, num_classes = load_data()
+    train_dataset, val_dataset, _, input_shape, num_classes = load_data(model_type)
 
     # Building model using the get_model function
     model = get_model(model_type, input_shape, num_classes)

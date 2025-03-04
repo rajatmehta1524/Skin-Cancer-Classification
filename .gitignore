@@ -7,8 +7,6 @@ __pycache__/
 
 # Ignore dataset and large files
 data/
-models/
-results/
 logs/
-
+models/
 

@@ -1,10 +1,32 @@
 import tensorflow as tf
+from transformers import ViTFeatureExtractor
 import os
 
 DATASET_DIR = "../dataset"
 IMG_SIZE = (224, 224)  # Input Image size
 BATCH_SIZE = 8  # Batch Size for training purpose
 AUTOTUNE = tf.data.AUTOTUNE
+
+# Load ViT Feature Extractor
+feature_extractor = ViTFeatureExtractor.from_pretrained("google/vit-base-patch16-224-in21k")
+
+# def preprocess_fn(image):
+#     """Function to preprocess input image for ViT"""
+#     return feature_extractor(image, return_tensors="tf")["pixel_values"]
+
+def preprocess_fn(image, label):
+    """Function to preprocess input image for ViT"""
+    image = tf.image.resize(image, [224, 224])  # Ensure correct input size
+    image = image.numpy()  # Convert tensor to NumPy array
+    image = feature_extractor(image, return_tensors="tf")["pixel_values"]
+    return image, label  # Ensure label is returned unchanged
+
+# Ensure TF Dataset uses NumPy conversion
+def tf_preprocess_fn(image, label):
+    """Wrap preprocess_fn for use in tf.data pipeline"""
+    image, label = tf.py_function(preprocess_fn, [image, label], [tf.float32, tf.int64])
+    image.set_shape((1, 3, 224, 224))  # ViT expects (batch, channels, height, width)
+    return image, label
 
 def preprocess_image(image, label):
 
@@ -33,7 +55,7 @@ def preprocess_image(image, label):
     
     return image, label
 
-def load_data():
+def load_data(model_type):
 
     # Loading train, val and test datasets from respective directories
 
@@ -61,19 +83,30 @@ def load_data():
     # Extract class names and determine number of classes
     class_names = train_ds.class_names
     num_classes = len(class_names)
+
+    if model_type != "vit": # Data Preprocessing for CNN and ConvNext Model 
+        # Normalizing pixel values
+        normalization_layer = tf.keras.layers.Rescaling(1./255)
+        
+        train_ds = train_ds.map(lambda x, y: (normalization_layer(x), y), num_parallel_calls=AUTOTUNE)
+        val_ds = val_ds.map(lambda x, y: (normalization_layer(x), y), num_parallel_calls=AUTOTUNE)
+        test_ds = test_ds.map(lambda x, y: (normalization_layer(x), y), num_parallel_calls=AUTOTUNE)
     
-    # Normalizing pixel values
-    normalization_layer = tf.keras.layers.Rescaling(1./255)
-    
-    train_ds = train_ds.map(lambda x, y: (normalization_layer(x), y), num_parallel_calls=AUTOTUNE)
-    val_ds = val_ds.map(lambda x, y: (normalization_layer(x), y), num_parallel_calls=AUTOTUNE)
-    test_ds = test_ds.map(lambda x, y: (normalization_layer(x), y), num_parallel_calls=AUTOTUNE)
-    
-    # Applying preprocessing
-    train_ds = train_ds.map(preprocess_image, num_parallel_calls=AUTOTUNE)
-    val_ds = val_ds.map(preprocess_image, num_parallel_calls=AUTOTUNE)
-    test_ds = test_ds.map(preprocess_image, num_parallel_calls=AUTOTUNE)
-    
+        # Applying preprocessing
+        train_ds = train_ds.map(preprocess_image, num_parallel_calls=AUTOTUNE)
+        val_ds = val_ds.map(preprocess_image, num_parallel_calls=AUTOTUNE)
+        test_ds = test_ds.map(preprocess_image, num_parallel_calls=AUTOTUNE)
+
+    else: # Data Preprocessing for Vision Transformer model
+        # train_ds = train_ds.map(lambda x, y: (preprocess_fn(x), y), num_parallel_calls=AUTOTUNE)
+        # val_ds = val_ds.map(lambda x, y: (preprocess_fn(x), y), num_parallel_calls=AUTOTUNE)
+        # test_ds = test_ds.map(lambda x, y: (preprocess_fn(x), y), num_parallel_calls=AUTOTUNE)
+        train_ds = train_ds.map(tf_preprocess_fn, num_parallel_calls=AUTOTUNE)
+        val_ds = val_ds.map(tf_preprocess_fn, num_parallel_calls=AUTOTUNE)
+        test_ds = test_ds.map(tf_preprocess_fn, num_parallel_calls=AUTOTUNE)
+
+
+
     # Prefetch to improve performance
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
     val_ds = val_ds.prefetch(buffer_size=AUTOTUNE)

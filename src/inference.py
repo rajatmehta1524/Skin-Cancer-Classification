@@ -3,8 +3,9 @@ import numpy as np
 import os
 import argparse
 import cv2
-from helper import display_sample_predictions, preprocess_image
+from helper import display_sample_predictions
 import time
+from PIL import Image
 
 def load_trained_model(model_type, model_dir="../models"):
     """
@@ -22,21 +23,41 @@ def load_trained_model(model_type, model_dir="../models"):
     print(f"Model loaded successfully from {model_path}")
     return model
 
-def predict(model, image_path):
+def predict(model, image_path, IMG_SIZE = (224,224)):
     """Preprocesses the image and makes a prediction."""
-    image = preprocess_image(image_path)  # Resize, normalize, contrast adjustment
-    image = np.expand_dims(image, axis=0)  # Add batch dimension
     
+    if not os.path.exists(image_path):
+        print(f"Error: The image path {image_path} does not exist.")
+        return
+    
+    try:
+        # Open and resize the image to the required input size
+        img = Image.open(image_path).resize((IMG_SIZE[0], IMG_SIZE[1]))
+        img_array = np.array(img)
+        
+        if img_array.shape[-1] != 3:  
+            raise ValueError("Image must have 3 channels (RGB).")
+        
+        img_array = img_array.astype('float32') / 255.0
+        
+        image = np.expand_dims(img_array, axis=0)
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        return
+
+    # Make prediction using the model
     start_time = time.time()
     prediction = model.predict(image)
     end_time = time.time()
 
+    # Post-processing of the prediction
     predicted_class = np.argmax(prediction)
     confidence = np.max(prediction)
 
+    # Inference time in milliseconds
     inference_time = (end_time - start_time) * 1000  # Convert to milliseconds
-    print(f"Inference Time: {inference_time:.2f} ms")
 
+    print(f"Inference Time: {inference_time:.2f} ms")
     print(f"Predicted Class: {predicted_class}, Confidence: {confidence:.2f}")
 
 def make_predictions(model, dataset, num_samples=10):
