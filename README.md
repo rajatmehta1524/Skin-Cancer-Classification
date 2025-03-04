@@ -1,4 +1,3 @@
-
 # Skin Cancer Classification
 
 ## Overview
@@ -46,6 +45,24 @@ pip install -r requirements.txt
 ## Dataset
 This project uses a dataset of skin cancer images with a train-test split. Ensure the dataset is placed inside the `datasets/` directory.
 
+### Dataset Samples
+Below are some sample images from the dataset:
+
+![Dataset Sample Images](assets/dataset_sample.png)  
+*Figure 1: Example images from the dataset (benign vs. malignant).*
+
+## Model Architectures
+This project supports three different model architectures:
+
+### Convolutional Neural Network (CNN)
+![CNN Architecture](assets/cnn_architecture.png)  
+*Figure 2: CNN model architecture.*
+
+### ConvNeXt
+![ConvNeXt Architecture](assets/convnext-tiny_architecture.png)  
+*Figure 3: ConvNeXt model architecture.*
+
+
 ## Training the Model
 To train the model, run:
 
@@ -66,6 +83,13 @@ python src/train.py --model convnext
 ```
 
 The trained model will be saved in the `models/` directory with the respective model name (`cnn_skin_cancer_model.h5`, `convnext_skin_cancer_model.h5`, or `vit_skin_cancer_model.h5`).
+
+## Training Results & Graphs
+Below are the loss and accuracy curves obtained during training:
+
+### Training and Validation Loss and Accuracy Curves
+![Training Loss Curve](assets/convnext_Training_vs_Val_loss.png)  
+*Figure 5: Training and validation loss and Accuracy curves.*
 
 ## Evaluating the Model
 After training, evaluate the model using:
@@ -93,10 +117,6 @@ Where `<model_type>` should be one of the model types used during training (`cnn
 python src/inference.py --model cnn --image_path path/to/image.jpg
 ```
 
-## Results & Visualization
-- Training history plots (loss & accuracy)
-- Sample predictions with confidence scores
-
 ## Future Improvements
 - Hyperparameter tuning
 - Data augmentation
@@ -107,3 +127,4 @@ Feel free to fork the repository and submit pull requests.
 
 ## License
 This project is licensed under the MIT License.
+
